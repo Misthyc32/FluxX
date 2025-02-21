@@ -43,7 +43,7 @@ FluxXTensor* create_ftensor(int *shape, int rank){
     //Allocate and calculate the strides
     ftensor->ftstrides = (int*)malloc(rank * sizeof(int));
     if (!ftensor->ftrank){
-        printf("Memory allocation failed for ftensor ftstride.\n"),
+        printf("Memory allocation failed for ftensor ftstride.\n");
         free(ftensor->ftdata);
         free(ftensor->ftshape);
         free(ftensor);
