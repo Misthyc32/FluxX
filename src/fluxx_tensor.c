@@ -1,5 +1,5 @@
 #include "../include/fluxx_tensor.h"
-
+//Function which creates the cpu ftensor 
 FluxXTensor* create_ftensor(int *shape, int rank){
     //Allocate the memory for the struct
     FluxXTensor *ftensor = (FluxXTensor*)malloc(sizeof(FluxXTensor)); 
@@ -52,7 +52,35 @@ FluxXTensor* create_ftensor(int *shape, int rank){
     int stride = 1;
     for (int i=rank - 1; i>=0; i--){
         ftensor->ftstrides[i] = stride;
-        stride += shape[i];
+        stride *= shape[i];
     }
     return ftensor;
+}
+
+//Function which allows the haddamard product of two cpu ftensor
+void haddamard_ftensor_product(FluxXTensor *ftensor1,FluxXTensor *ftensor2, FluxXTensor *result){
+    //Check same ranks ftensor
+    if ((ftensor1->ftrank) != (ftensor2->ftrank) ||  (ftensor1->ftrank) != (result->ftrank)){
+        printf("Cannot perform haddamard product ftranks are not equal.\n");
+        return NULL;
+    }
+
+
+    //Check same shapes ftensor
+    for (int i=0; i< ftensor1->ftrank; i++){
+        if ((ftensor1->ftshape[i])!= (ftensor2->ftshape[i]) || (ftensor1->ftshape[i]) != (result->ftshape[i])){
+            printf("Cannot perform haddamard product ftshape are not equal.\n");
+            return NULL;
+        }   
+    }
+    
+    //Obrain the total size of the tensor
+    int total_size=1;
+    for (int i=0; i<(ftensor1->ftrank);i++){
+        total_size *= (ftensor1->ftshape[i]);    
+    }
+    //Performe the Haddamard Product
+    for (int i=0; i<total_size; i++){
+        result->ftdata[i] = ftensor1->ftdata[i] * ftensor2->ftdata[i];
+    }
 }
