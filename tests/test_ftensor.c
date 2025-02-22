@@ -58,6 +58,6 @@ int main() {
     printf("Resulting Tensor:\n");
     print_ftensor(ftensor2);
 
-    //free_ftensor(ftensor);
+    free_ftensor(ftensor2);
     return 0;
 }   

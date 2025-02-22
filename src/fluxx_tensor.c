@@ -24,13 +24,8 @@ FluxXTensor* create_ftensor(int *shape, int rank){
     for (int i=0; i < rank; i++){
         ftensor->ftshape[i] = shape[i];    
     }
-    //Allocate memory for the total size of the tensor 
-    ftensor->ftsize =(int*)malloc(sizeof(int));
-    if (!ftensor->ftsize){
-        printf("Memory allocatiin failed for the ftensor ftsize.\n");
-        free(ftensor->ftsize);
-        free(ftensor);
-    }
+
+    //Store total size
     int total_size=1;
     for (int i=0; i<rank;i++){
         total_size *= shape[i];    
@@ -42,18 +37,16 @@ FluxXTensor* create_ftensor(int *shape, int rank){
     if (!ftensor->ftdata){
         printf("Memory allocatin failed for ftensor ftdata.\n");
         free(ftensor->ftshape);
-        free(ftensor->ftsize);
         free(ftensor);
         return NULL;
     }
 
     //Allocate and calculate the strides
     ftensor->ftstrides = (int*)malloc(rank * sizeof(int));
-    if (!ftensor->ftrank){
+    if (!ftensor->ftstrides){
         printf("Memory allocation failed for ftensor ftstride.\n");
         free(ftensor->ftdata);
         free(ftensor->ftshape);
-        free(ftensor->ftsize);
         free(ftensor);
         return NULL;
     }
@@ -70,7 +63,7 @@ void haddamard_ftensor_product(FluxXTensor *ftensor1,FluxXTensor *ftensor2, Flux
     //Check same ranks ftensor
     if ((ftensor1->ftrank) != (ftensor2->ftrank) ||  (ftensor1->ftrank) != (result->ftrank)){
         printf("Cannot perform haddamard product ftranks are not equal.\n");
-        return NULL;
+        return ;
     }
 
 
@@ -78,7 +71,7 @@ void haddamard_ftensor_product(FluxXTensor *ftensor1,FluxXTensor *ftensor2, Flux
     for (int i=0; i< ftensor1->ftrank; i++){
         if ((ftensor1->ftshape[i])!= (ftensor2->ftshape[i]) || (ftensor1->ftshape[i]) != (result->ftshape[i])){
             printf("Cannot perform haddamard product ftshape are not equal.\n");
-            return NULL;
+            return ;
         }   
     }
     
@@ -92,19 +85,27 @@ void sum_ftensor(FluxXTensor *ftensor1, FluxXTensor *ftensor2, FluxXTensor *resu
     //Check same ranks ftensor
     if ((ftensor1->ftrank) != (ftensor2->ftrank) ||  (ftensor1->ftrank) != (result->ftrank)){
         printf("Cannot perform sum ftranks are not equal.\n");
-        return NULL;
+        return ;
     }
 
     //Check same shapes ftensor
     for (int i=0; i< ftensor1->ftrank; i++){
         if ((ftensor1->ftshape[i])!= (ftensor2->ftshape[i]) || (ftensor1->ftshape[i]) != (result->ftshape[i])){
             printf("Cannot perform sum ftshape are not equal.\n");
-            return NULL;
+            return ;
         }   
     }
        
     //Sum the ftensor
     for (int i=0; i<(ftensor1->ftsize); i++){
-        result->ftdata[i] = ftensor1->ftdata[i] + ftensor1->ftdata[i]; 
+        result->ftdata[i] = ftensor1->ftdata[i] + ftensor2->ftdata[i]; 
     }
+}
+
+void free_ftensor(FluxXTensor *ftensor){
+    if (ftensor == NULL) return; 
+    free(ftensor->ftdata);
+    free(ftensor->ftshape);
+    free(ftensor->ftstrides);
+    free(ftensor);
 }
