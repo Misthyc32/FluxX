@@ -13,6 +13,7 @@ typedef struct
     int *ftshape;
     int  ftrank;
     int *ftstrides;
+    int ftsize;
 
 
 } FluxXTensor;
