@@ -22,7 +22,7 @@ void print_ftensor(FluxXTensor *ftensor) {
 }
 
 int main() {
-    int shape[2] = {2, 3};  // 2x3 tensor
+    int shape[2] = {3, 2};  // 2x3 tensor
     FluxXTensor *ftensor = create_ftensor(shape, 2);
 
     ftensor->ftdata[0] = 1.0;
@@ -51,9 +51,10 @@ int main() {
     ftensor2->ftdata[5] = 0.0; 
 
     haddamard_ftensor_product(ftensor,ftensor1,ftensor2);
+    printf("Resulting Tensor:\n");
+    print_ftensor(ftensor2);
 
-
-
+    sum_ftensor(ftensor,ftensor1,ftensor2);
     printf("Resulting Tensor:\n");
     print_ftensor(ftensor2);
 
