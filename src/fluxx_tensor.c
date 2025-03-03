@@ -109,3 +109,35 @@ void free_ftensor(FluxXTensor *ftensor){
     free(ftensor->ftstrides);
     free(ftensor);
 }
+
+void matrix_mult(FluxXTensor *ftensor1, FluxXTensor *ftensor2, FluxXTensor *result) {
+    // Validate matrix dimensions for multiplication
+    if (ftensor1->ftshape[1] != ftensor2->ftshape[0]) {
+        printf("Cannot perform matrix multiplication: incompatible shapes.\n");
+        return;
+    }
+    if ((result->ftshape[0] != ftensor1->ftshape[0]) || (result->ftshape[1] != ftensor2->ftshape[1])) {
+        printf("Cannot perform matrix multiplication: result shape is incorrect.\n");
+        return;
+    }
+
+    int r_rows = result->ftshape[0]; // Number of rows in result
+    int r_cols = result->ftshape[1]; // Number of columns in result
+    int n = ftensor1->ftshape[1];    // Shared dimension (columns of A, rows of B)
+
+    // Zero-initialize the result tensor
+    //for (int i = 0; i < result->ftsize; i++) {
+    //    result->ftdata[i] = 0.0f;
+    //}
+
+    // Perform matrix multiplication
+    for (int i = 0; i < r_rows; i++) {
+        for (int j = 0; j < r_cols; j++) {
+            float sum = 0.0f;
+            for (int k = 0; k < n; k++) {
+                sum += ftensor1->ftdata[i * n + k] * ftensor2->ftdata[k * r_cols + j];
+            }
+            result->ftdata[i * r_cols + j] = sum;
+        }
+    }
+}

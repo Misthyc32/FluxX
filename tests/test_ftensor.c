@@ -22,7 +22,8 @@ void print_ftensor(FluxXTensor *ftensor) {
 }
 
 int main() {
-    int shape[2] = {3, 2};  // 2x3 tensor
+    int shape[2] = {3, 3};  // 3x3 tensor
+
     FluxXTensor *ftensor = create_ftensor(shape, 2);
 
     ftensor->ftdata[0] = 1.0;
@@ -31,6 +32,9 @@ int main() {
     ftensor->ftdata[3] = 4.0;
     ftensor->ftdata[4] = 5.0;
     ftensor->ftdata[5] = 6.0;
+    ftensor->ftdata[6] = 7.0;
+    ftensor->ftdata[7] = 8.0;
+    ftensor->ftdata[8] = 9.0;
 
     FluxXTensor *ftensor1 = create_ftensor(shape, 2);
 
@@ -40,6 +44,9 @@ int main() {
     ftensor1->ftdata[3] = 4.0;
     ftensor1->ftdata[4] = 5.0;
     ftensor1->ftdata[5] = 6.0;
+    ftensor1->ftdata[6] = 7.0;
+    ftensor1->ftdata[7] = 8.0;
+    ftensor1->ftdata[8] = 9.0;
 
     FluxXTensor *ftensor2 = create_ftensor(shape, 2);
 
@@ -49,12 +56,20 @@ int main() {
     ftensor2->ftdata[3] = 0.0;
     ftensor2->ftdata[4] = 0.0;
     ftensor2->ftdata[5] = 0.0; 
+    ftensor2->ftdata[6] = 0.0;
+    ftensor2->ftdata[7] = 0.0;
+    ftensor2->ftdata[8] = 0.0;
+    
 
     haddamard_ftensor_product(ftensor,ftensor1,ftensor2);
     printf("Resulting Tensor:\n");
     print_ftensor(ftensor2);
 
     sum_ftensor(ftensor,ftensor1,ftensor2);
+    printf("Resulting Tensor:\n");
+    print_ftensor(ftensor2);
+
+    matrix_mult(ftensor,ftensor1 ,ftensor2);
     printf("Resulting Tensor:\n");
     print_ftensor(ftensor2);
 
